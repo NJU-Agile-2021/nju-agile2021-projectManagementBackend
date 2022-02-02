@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:mysql://rm-uf664b66p5k7i4i7gno.mysql.rds.aliyuncs.com:3306/project_management?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: fsm
+    password: Nju123456

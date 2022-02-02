@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.projectManagement.Mapper.TaskMapper">
+  <resultMap id="BaseResultMap" type="com.nju.projectManagement.DO.TaskDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="estimate_complete_time" jdbcType="TIMESTAMP" property="estimateCompleteTime" />
+    <result column="complete_time" jdbcType="TIMESTAMP" property="completeTime" />
+    <result column="task_list_id" jdbcType="INTEGER" property="taskListId" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.nju.projectManagement.DO.TaskDO">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, title, priority, state, create_user_id, create_time, update_time, estimate_complete_time, 
+    complete_time, task_list_id, project_id
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.nju.projectManagement.DO.TaskDOExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.nju.projectManagement.DO.TaskDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nju.projectManagement.DO.TaskDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into task (title, priority, state, 
+      create_user_id, estimate_complete_time, complete_time, 
+      task_list_id, project_id, content
+      )
+    values (#{title,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=INTEGER}, #{estimateCompleteTime,jdbcType=TIMESTAMP}, #{completeTime,jdbcType=TIMESTAMP}, 
+      #{taskListId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.TaskDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        title,
+      </if>
+      <if test="priority != null">
+        priority,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="estimateCompleteTime != null">
+        estimate_complete_time,
+      </if>
+      <if test="completeTime != null">
+        complete_time,
+      </if>
+      <if test="taskListId != null">
+        task_list_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="estimateCompleteTime != null">
+        #{estimateCompleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeTime != null">
+        #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskListId != null">
+        #{taskListId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nju.projectManagement.DO.TaskDO">
+    update task
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="estimateCompleteTime != null">
+        estimate_complete_time = #{estimateCompleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeTime != null">
+        complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskListId != null">
+        task_list_id = #{taskListId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.nju.projectManagement.DO.TaskDO">
+    update task
+    set title = #{title,jdbcType=VARCHAR},
+      priority = #{priority,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      estimate_complete_time = #{estimateCompleteTime,jdbcType=TIMESTAMP},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      task_list_id = #{taskListId,jdbcType=INTEGER},
+      project_id = #{projectId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nju.projectManagement.DO.TaskDO">
+    update task
+    set title = #{title,jdbcType=VARCHAR},
+      priority = #{priority,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      estimate_complete_time = #{estimateCompleteTime,jdbcType=TIMESTAMP},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      task_list_id = #{taskListId,jdbcType=INTEGER},
+      project_id = #{projectId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into task
+    (title, priority, state, create_user_id, estimate_complete_time, complete_time, task_list_id, 
+      project_id, content)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.title,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, #{item.state,jdbcType=INTEGER}, 
+        #{item.createUserId,jdbcType=INTEGER}, #{item.estimateCompleteTime,jdbcType=TIMESTAMP}, 
+        #{item.completeTime,jdbcType=TIMESTAMP}, #{item.taskListId,jdbcType=INTEGER}, #{item.projectId,jdbcType=INTEGER}, 
+        #{item.content,jdbcType=LONGVARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" keyColumn="id" keyProperty="list.id" parameterType="map" useGeneratedKeys="true">
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        insert into task (
+        <foreach collection="selective" item="column" separator=",">
+          ${column.escapedColumnName}
+        </foreach>
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+          (
+          <foreach collection="selective" item="column" separator=",">
+            <if test="'title'.toString() == column.value">
+              #{item.title,jdbcType=VARCHAR}
+            </if>
+            <if test="'priority'.toString() == column.value">
+              #{item.priority,jdbcType=INTEGER}
+            </if>
+            <if test="'state'.toString() == column.value">
+              #{item.state,jdbcType=INTEGER}
+            </if>
+            <if test="'create_user_id'.toString() == column.value">
+              #{item.createUserId,jdbcType=INTEGER}
+            </if>
+            <if test="'estimate_complete_time'.toString() == column.value">
+              #{item.estimateCompleteTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="'complete_time'.toString() == column.value">
+              #{item.completeTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="'task_list_id'.toString() == column.value">
+              #{item.taskListId,jdbcType=INTEGER}
+            </if>
+            <if test="'project_id'.toString() == column.value">
+              #{item.projectId,jdbcType=INTEGER}
+            </if>
+            <if test="'content'.toString() == column.value">
+              #{item.content,jdbcType=LONGVARCHAR}
+            </if>
+          </foreach>
+          )
+        </foreach>
+      </when>
+      <otherwise>
+        <foreach collection="list" item="item" separator=";">
+          insert into task
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.title != null">
+                title,
+              </if>
+              <if test="item.priority != null">
+                priority,
+              </if>
+              <if test="item.state != null">
+                state,
+              </if>
+              <if test="item.createUserId != null">
+                create_user_id,
+              </if>
+              <if test="item.estimateCompleteTime != null">
+                estimate_complete_time,
+              </if>
+              <if test="item.completeTime != null">
+                complete_time,
+              </if>
+              <if test="item.taskListId != null">
+                task_list_id,
+              </if>
+              <if test="item.projectId != null">
+                project_id,
+              </if>
+              <if test="item.content != null">
+                content,
+              </if>
+            </trim>
+          </trim>
+          values
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.title != null">
+                #{item.title,jdbcType=VARCHAR},
+              </if>
+              <if test="item.priority != null">
+                #{item.priority,jdbcType=INTEGER},
+              </if>
+              <if test="item.state != null">
+                #{item.state,jdbcType=INTEGER},
+              </if>
+              <if test="item.createUserId != null">
+                #{item.createUserId,jdbcType=INTEGER},
+              </if>
+              <if test="item.estimateCompleteTime != null">
+                #{item.estimateCompleteTime,jdbcType=TIMESTAMP},
+              </if>
+              <if test="item.completeTime != null">
+                #{item.completeTime,jdbcType=TIMESTAMP},
+              </if>
+              <if test="item.taskListId != null">
+                #{item.taskListId,jdbcType=INTEGER},
+              </if>
+              <if test="item.projectId != null">
+                #{item.projectId,jdbcType=INTEGER},
+              </if>
+              <if test="item.content != null">
+                #{item.content,jdbcType=LONGVARCHAR},
+              </if>
+            </trim>
+          </trim>
+        </foreach>
+      </otherwise>
+    </choose>
+  </insert>
+</mapper>

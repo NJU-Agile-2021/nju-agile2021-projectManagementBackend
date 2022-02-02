@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+spring:
+  profiles:
+    active: dev

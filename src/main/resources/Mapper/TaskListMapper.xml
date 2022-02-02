@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.projectManagement.Mapper.TaskListMapper">
+  <resultMap id="BaseResultMap" type="com.nju.projectManagement.DO.TaskListDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, project_id
+  </sql>
+  <select id="selectByExample" parameterType="com.nju.projectManagement.DO.TaskListDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from task_list
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nju.projectManagement.DO.TaskListDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into task_list (name, project_id)
+    values (#{name,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.TaskListDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into task_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nju.projectManagement.DO.TaskListDO">
+    update task_list
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nju.projectManagement.DO.TaskListDO">
+    update task_list
+    set name = #{name,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into task_list
+    (name, project_id)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.name,jdbcType=VARCHAR}, #{item.projectId,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" keyColumn="id" keyProperty="list.id" parameterType="map" useGeneratedKeys="true">
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        insert into task_list (
+        <foreach collection="selective" item="column" separator=",">
+          ${column.escapedColumnName}
+        </foreach>
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+          (
+          <foreach collection="selective" item="column" separator=",">
+            <if test="'name'.toString() == column.value">
+              #{item.name,jdbcType=VARCHAR}
+            </if>
+            <if test="'project_id'.toString() == column.value">
+              #{item.projectId,jdbcType=INTEGER}
+            </if>
+          </foreach>
+          )
+        </foreach>
+      </when>
+      <otherwise>
+        <foreach collection="list" item="item" separator=";">
+          insert into task_list
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.name != null">
+                name,
+              </if>
+              <if test="item.projectId != null">
+                project_id,
+              </if>
+            </trim>
+          </trim>
+          values
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.name != null">
+                #{item.name,jdbcType=VARCHAR},
+              </if>
+              <if test="item.projectId != null">
+                #{item.projectId,jdbcType=INTEGER},
+              </if>
+            </trim>
+          </trim>
+        </foreach>
+      </otherwise>
+    </choose>
+  </insert>
+</mapper>

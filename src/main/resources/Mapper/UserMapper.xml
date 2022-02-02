@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.projectManagement.Mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.nju.projectManagement.DO.UserDO">
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_uuid" jdbcType="VARCHAR" property="userUuid" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    user_id, user_uuid, user_name, role, pwd, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.nju.projectManagement.DO.UserDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insert" parameterType="com.nju.projectManagement.DO.UserDO">
+    insert into user (user_id, user_uuid, user_name, 
+      role, pwd, create_time, 
+      update_time)
+    values (#{userId,jdbcType=INTEGER}, #{userUuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{role,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.UserDO">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userUuid != null">
+        user_uuid,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userUuid != null">
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="map">
+    insert into user
+    (user_id, user_uuid, user_name, role, pwd, create_time, update_time)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.userId,jdbcType=INTEGER}, #{item.userUuid,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, 
+        #{item.role,jdbcType=VARCHAR}, #{item.pwd,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        insert into user (
+        <foreach collection="selective" item="column" separator=",">
+          ${column.escapedColumnName}
+        </foreach>
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+          (
+          <foreach collection="selective" item="column" separator=",">
+            <if test="'user_id'.toString() == column.value">
+              #{item.userId,jdbcType=INTEGER}
+            </if>
+            <if test="'user_uuid'.toString() == column.value">
+              #{item.userUuid,jdbcType=VARCHAR}
+            </if>
+            <if test="'user_name'.toString() == column.value">
+              #{item.userName,jdbcType=VARCHAR}
+            </if>
+            <if test="'role'.toString() == column.value">
+              #{item.role,jdbcType=VARCHAR}
+            </if>
+            <if test="'pwd'.toString() == column.value">
+              #{item.pwd,jdbcType=VARCHAR}
+            </if>
+            <if test="'create_time'.toString() == column.value">
+              #{item.createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="'update_time'.toString() == column.value">
+              #{item.updateTime,jdbcType=TIMESTAMP}
+            </if>
+          </foreach>
+          )
+        </foreach>
+      </when>
+      <otherwise>
+        <foreach collection="list" item="item" separator=";">
+          insert into user
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.userId != null">
+                user_id,
+              </if>
+              <if test="item.userUuid != null">
+                user_uuid,
+              </if>
+              <if test="item.userName != null">
+                user_name,
+              </if>
+              <if test="item.role != null">
+                role,
+              </if>
+              <if test="item.pwd != null">
+                pwd,
+              </if>
+              <if test="item.createTime != null">
+                create_time,
+              </if>
+              <if test="item.updateTime != null">
+                update_time,
+              </if>
+            </trim>
+          </trim>
+          values
+          <trim>
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="item.userId != null">
+                #{item.userId,jdbcType=INTEGER},
+              </if>
+              <if test="item.userUuid != null">
+                #{item.userUuid,jdbcType=VARCHAR},
+              </if>
+              <if test="item.userName != null">
+                #{item.userName,jdbcType=VARCHAR},
+              </if>
+              <if test="item.role != null">
+                #{item.role,jdbcType=VARCHAR},
+              </if>
+              <if test="item.pwd != null">
+                #{item.pwd,jdbcType=VARCHAR},
+              </if>
+              <if test="item.createTime != null">
+                #{item.createTime,jdbcType=TIMESTAMP},
+              </if>
+              <if test="item.updateTime != null">
+                #{item.updateTime,jdbcType=TIMESTAMP},
+              </if>
+            </trim>
+          </trim>
+        </foreach>
+      </otherwise>
+    </choose>
+  </insert>
+</mapper>
