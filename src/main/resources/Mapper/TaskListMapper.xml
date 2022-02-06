@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -36,7 +37,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, project_id
+    id, name, project_id, create_time
   </sql>
   <select id="selectByExample" parameterType="com.nju.projectManagement.DO.TaskListDOExample" resultMap="BaseResultMap">
     select
@@ -67,8 +68,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into task_list (name, project_id)
-    values (#{name,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER})
+    insert into task_list (name, project_id, create_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.TaskListDO">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -82,6 +85,9 @@
       <if test="projectId != null">
         project_id,
       </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -89,6 +95,9 @@
       </if>
       <if test="projectId != null">
         #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -101,21 +110,26 @@
       <if test="projectId != null">
         project_id = #{projectId,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.nju.projectManagement.DO.TaskListDO">
     update task_list
     set name = #{name,jdbcType=VARCHAR},
-      project_id = #{projectId,jdbcType=INTEGER}
+      project_id = #{projectId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     insert into task_list
-    (name, project_id)
+    (name, project_id, create_time)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.name,jdbcType=VARCHAR}, #{item.projectId,jdbcType=INTEGER})
+      (#{item.name,jdbcType=VARCHAR}, #{item.projectId,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" keyColumn="id" keyProperty="list.id" parameterType="map" useGeneratedKeys="true">
@@ -136,6 +150,9 @@
             <if test="'project_id'.toString() == column.value">
               #{item.projectId,jdbcType=INTEGER}
             </if>
+            <if test="'create_time'.toString() == column.value">
+              #{item.createTime,jdbcType=TIMESTAMP}
+            </if>
           </foreach>
           )
         </foreach>
@@ -151,6 +168,9 @@
               <if test="item.projectId != null">
                 project_id,
               </if>
+              <if test="item.createTime != null">
+                create_time,
+              </if>
             </trim>
           </trim>
           values
@@ -161,6 +181,9 @@
               </if>
               <if test="item.projectId != null">
                 #{item.projectId,jdbcType=INTEGER},
+              </if>
+              <if test="item.createTime != null">
+                #{item.createTime,jdbcType=TIMESTAMP},
               </if>
             </trim>
           </trim>

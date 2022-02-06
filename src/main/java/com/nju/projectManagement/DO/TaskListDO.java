@@ -2,6 +2,7 @@ package com.nju.projectManagement.DO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class TaskListDO {
     private Integer id;
@@ -9,6 +10,8 @@ public class TaskListDO {
     private String name;
 
     private Integer projectId;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -34,10 +37,19 @@ public class TaskListDO {
         this.projectId = projectId;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public enum Column {
         id("id", "id", "INTEGER", false),
         name("name", "name", "VARCHAR", false),
-        projectId("project_id", "projectId", "INTEGER", false);
+        projectId("project_id", "projectId", "INTEGER", false),
+        createTime("create_time", "createTime", "TIMESTAMP", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 
