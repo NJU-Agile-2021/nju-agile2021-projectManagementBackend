@@ -7,6 +7,7 @@ import com.nju.projectManagement.Service.BL.UserService;
 import com.nju.projectManagement.VO.LoginVO;
 import com.nju.projectManagement.VO.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Toby Fu
  * @date 2022/2/7
  **/
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

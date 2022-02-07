@@ -1,5 +1,6 @@
 package com.nju.projectManagement.VO;
 
+import com.nju.projectManagement.DO.ProjectMemberDO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,16 @@ import lombok.NoArgsConstructor;
 public class ProjectMemberVO {
     private Integer projectId;
     private Integer userId;
+    /**
+     *0：普通，1：管理员,2:创建者
+     */
+    private Integer role;
+
+    public ProjectMemberDO toProjectMember(){
+        ProjectMemberDO ans=new ProjectMemberDO();
+        ans.setProjectId(projectId);
+        ans.setUserId(userId);
+        ans.setRole(role);
+        return ans;
+    }
 }
