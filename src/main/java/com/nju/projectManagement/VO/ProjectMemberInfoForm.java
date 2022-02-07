@@ -15,5 +15,6 @@ public class ProjectMemberInfoForm {
     private Integer projectId;
     private Integer userId;
     private String name;
+    private Integer role;
     private Integer relationshipId;
 }

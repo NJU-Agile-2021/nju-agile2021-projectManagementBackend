@@ -5,6 +5,7 @@
 
 <generatorConfiguration>
     <context id="context"    targetRuntime="MyBatis3">
+
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
         <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>
         <plugin type="com.itfsw.mybatis.generator.plugins.BatchInsertPlugin">
@@ -18,6 +19,7 @@
             connectionURL="jdbc:mysql://rm-uf664b66p5k7i4i7gno.mysql.rds.aliyuncs.com/project_management?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
             userId="fsm"
             password="Nju123456">
+            <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>

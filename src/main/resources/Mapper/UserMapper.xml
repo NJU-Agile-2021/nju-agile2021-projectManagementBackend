@@ -2,13 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nju.projectManagement.Mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.nju.projectManagement.DO.UserDO">
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="user_uuid" jdbcType="VARCHAR" property="userUuid" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="role" jdbcType="VARCHAR" property="role" />
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -40,7 +37,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    user_id, user_uuid, user_name, role, pwd, create_time, update_time
+    id, name, pwd, email
   </sql>
   <select id="selectByExample" parameterType="com.nju.projectManagement.DO.UserDOExample" resultMap="BaseResultMap">
     select
@@ -57,74 +54,85 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.nju.projectManagement.DO.UserDO">
-    insert into user (user_id, user_uuid, user_name, 
-      role, pwd, create_time, 
-      update_time)
-    values (#{userId,jdbcType=INTEGER}, #{userUuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{role,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user (name, pwd, email
+      )
+    values (#{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.UserDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="userUuid != null">
-        user_uuid,
-      </if>
-      <if test="userName != null">
-        user_name,
-      </if>
-      <if test="role != null">
-        role,
+      <if test="name != null">
+        name,
       </if>
       <if test="pwd != null">
         pwd,
       </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="email != null">
+        email,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="userUuid != null">
-        #{userUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="role != null">
-        #{role,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="pwd != null">
         #{pwd,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <insert id="batchInsert" parameterType="map">
+  <update id="updateByPrimaryKeySelective" parameterType="com.nju.projectManagement.DO.UserDO">
+    update user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nju.projectManagement.DO.UserDO">
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     insert into user
-    (user_id, user_uuid, user_name, role, pwd, create_time, update_time)
+    (name, pwd, email)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.userId,jdbcType=INTEGER}, #{item.userUuid,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, 
-        #{item.role,jdbcType=VARCHAR}, #{item.pwd,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateTime,jdbcType=TIMESTAMP})
+      (#{item.name,jdbcType=VARCHAR}, #{item.pwd,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
-  <insert id="batchInsertSelective" parameterType="map">
+  <insert id="batchInsertSelective" keyColumn="id" keyProperty="list.id" parameterType="map" useGeneratedKeys="true">
     <choose>
       <when test="selective != null and selective.length > 0">
         insert into user (
@@ -136,26 +144,14 @@
         <foreach collection="list" item="item" separator=",">
           (
           <foreach collection="selective" item="column" separator=",">
-            <if test="'user_id'.toString() == column.value">
-              #{item.userId,jdbcType=INTEGER}
-            </if>
-            <if test="'user_uuid'.toString() == column.value">
-              #{item.userUuid,jdbcType=VARCHAR}
-            </if>
-            <if test="'user_name'.toString() == column.value">
-              #{item.userName,jdbcType=VARCHAR}
-            </if>
-            <if test="'role'.toString() == column.value">
-              #{item.role,jdbcType=VARCHAR}
+            <if test="'name'.toString() == column.value">
+              #{item.name,jdbcType=VARCHAR}
             </if>
             <if test="'pwd'.toString() == column.value">
               #{item.pwd,jdbcType=VARCHAR}
             </if>
-            <if test="'create_time'.toString() == column.value">
-              #{item.createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="'update_time'.toString() == column.value">
-              #{item.updateTime,jdbcType=TIMESTAMP}
+            <if test="'email'.toString() == column.value">
+              #{item.email,jdbcType=VARCHAR}
             </if>
           </foreach>
           )
@@ -166,52 +162,28 @@
           insert into user
           <trim>
             <trim prefix="(" suffix=")" suffixOverrides=",">
-              <if test="item.userId != null">
-                user_id,
-              </if>
-              <if test="item.userUuid != null">
-                user_uuid,
-              </if>
-              <if test="item.userName != null">
-                user_name,
-              </if>
-              <if test="item.role != null">
-                role,
+              <if test="item.name != null">
+                name,
               </if>
               <if test="item.pwd != null">
                 pwd,
               </if>
-              <if test="item.createTime != null">
-                create_time,
-              </if>
-              <if test="item.updateTime != null">
-                update_time,
+              <if test="item.email != null">
+                email,
               </if>
             </trim>
           </trim>
           values
           <trim>
             <trim prefix="(" suffix=")" suffixOverrides=",">
-              <if test="item.userId != null">
-                #{item.userId,jdbcType=INTEGER},
-              </if>
-              <if test="item.userUuid != null">
-                #{item.userUuid,jdbcType=VARCHAR},
-              </if>
-              <if test="item.userName != null">
-                #{item.userName,jdbcType=VARCHAR},
-              </if>
-              <if test="item.role != null">
-                #{item.role,jdbcType=VARCHAR},
+              <if test="item.name != null">
+                #{item.name,jdbcType=VARCHAR},
               </if>
               <if test="item.pwd != null">
                 #{item.pwd,jdbcType=VARCHAR},
               </if>
-              <if test="item.createTime != null">
-                #{item.createTime,jdbcType=TIMESTAMP},
-              </if>
-              <if test="item.updateTime != null">
-                #{item.updateTime,jdbcType=TIMESTAMP},
+              <if test="item.email != null">
+                #{item.email,jdbcType=VARCHAR},
               </if>
             </trim>
           </trim>

@@ -2,53 +2,30 @@ package com.nju.projectManagement.DO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 public class UserDO {
-    private Integer userId;
+    private Integer id;
 
-    private String userUuid;
-
-    private String userName;
-
-    private String role;
+    private String name;
 
     private String pwd;
 
-    private Date createTime;
+    private String email;
 
-    private Date updateTime;
-
-    public Integer getUserId() {
-        return userId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getUserUuid() {
-        return userUuid;
+    public String getName() {
+        return name;
     }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid == null ? null : userUuid.trim();
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role == null ? null : role.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getPwd() {
@@ -59,30 +36,19 @@ public class UserDO {
         this.pwd = pwd == null ? null : pwd.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
     public enum Column {
-        userId("user_id", "userId", "INTEGER", false),
-        userUuid("user_uuid", "userUuid", "VARCHAR", false),
-        userName("user_name", "userName", "VARCHAR", false),
-        role("role", "role", "VARCHAR", false),
+        id("id", "id", "INTEGER", false),
+        name("name", "name", "VARCHAR", false),
         pwd("pwd", "pwd", "VARCHAR", false),
-        createTime("create_time", "createTime", "TIMESTAMP", false),
-        updateTime("update_time", "updateTime", "TIMESTAMP", false);
+        email("email", "email", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

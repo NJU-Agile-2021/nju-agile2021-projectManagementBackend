@@ -2,15 +2,14 @@ package com.nju.projectManagement.Controller;
 
 import com.nju.projectManagement.VO.LoginVO;
 import com.nju.projectManagement.VO.ResponseVO;
+import com.nju.projectManagement.VO.UserIdAndNameVO;
 import com.nju.projectManagement.VO.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author Toby Fu
@@ -30,6 +29,12 @@ public class UserController {
     @Operation(summary = "register")
     @PostMapping(value = "/register",consumes={ "application/json"},produces={ "application/json" })
     public ResponseVO<UserVO> register(@RequestBody UserVO userVO) {
+        return null;
+    }
+
+    @Operation(summary = "searchUsersByNameOrEmail")
+    @GetMapping(value = "/searchUsersByNameOrEmail")
+    public ResponseVO<List<UserIdAndNameVO>> searchUsersByNameOrEmail(@RequestParam String userNameOrEmail) {
         return null;
     }
 }

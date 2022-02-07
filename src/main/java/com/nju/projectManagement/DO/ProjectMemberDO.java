@@ -11,6 +11,8 @@ public class ProjectMemberDO {
 
     private Integer userId;
 
+    private Integer role;
+
     private Date createTime;
 
     public Integer getId() {
@@ -37,6 +39,14 @@ public class ProjectMemberDO {
         this.userId = userId;
     }
 
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -49,6 +59,7 @@ public class ProjectMemberDO {
         id("id", "id", "INTEGER", false),
         projectId("project_id", "projectId", "INTEGER", false),
         userId("user_id", "userId", "INTEGER", false),
+        role("role", "role", "INTEGER", false),
         createTime("create_time", "createTime", "TIMESTAMP", false);
 
         private static final String BEGINNING_DELIMITER = "\"";

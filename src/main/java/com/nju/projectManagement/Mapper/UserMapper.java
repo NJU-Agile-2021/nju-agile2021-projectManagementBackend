@@ -6,11 +6,19 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
+    int deleteByPrimaryKey(Integer id);
+
     int insert(UserDO record);
 
     int insertSelective(UserDO record);
 
     List<UserDO> selectByExample(UserDOExample example);
+
+    UserDO selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(UserDO record);
+
+    int updateByPrimaryKey(UserDO record);
 
     int batchInsert(@Param("list") List<UserDO> list);
 
