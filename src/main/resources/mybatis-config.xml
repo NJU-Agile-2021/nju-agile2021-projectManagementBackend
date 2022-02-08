@@ -63,7 +63,7 @@
         </table>
 
         <table tableName="task" domainObjectName="TaskDO" mapperName="TaskMapper"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="true" selectByExampleQueryId="false">
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="create_time" isGeneratedAlways="true"/>
             <columnOverride column="update_time" isGeneratedAlways="true"/>

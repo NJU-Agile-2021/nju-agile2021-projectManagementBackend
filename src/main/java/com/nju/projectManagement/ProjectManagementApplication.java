@@ -1,8 +1,9 @@
 package com.nju.projectManagement;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+@MapperScan("com.nju.projectManagement.Mapper")
 @SpringBootApplication
 public class ProjectManagementApplication {
 

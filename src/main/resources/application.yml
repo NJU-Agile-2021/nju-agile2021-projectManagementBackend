@@ -13,3 +13,7 @@ mybatis:
 spring:
   profiles:
     active: dev
+mybatis:
+  mapper-locations: classpath:Mapper/*.xml
+  check-config-location: true
+  type-aliases-package: com.nju.projectManagement.DO

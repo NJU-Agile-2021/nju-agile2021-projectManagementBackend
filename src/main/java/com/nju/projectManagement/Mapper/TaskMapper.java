@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TaskMapper {
+    int deleteByExample(TaskDOExample example);
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(TaskDO record);
