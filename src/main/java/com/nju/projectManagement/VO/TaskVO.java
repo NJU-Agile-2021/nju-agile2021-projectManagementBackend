@@ -1,8 +1,10 @@
 package com.nju.projectManagement.VO;
 
+import com.nju.projectManagement.DO.TaskDO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
@@ -37,4 +39,8 @@ public class TaskVO {
     private Integer projectId;
 
     private String content;
+
+    public TaskVO(TaskDO taskDO){
+        BeanUtils.copyProperties(taskDO, this);
+    }
 }
