@@ -42,8 +42,8 @@ public class UserControllerTest {
 
     @Test
     public void registerSuccessTest() throws Exception {
-        UserVO userVO = new UserVO(null, NAME, VALID_EMAIL_1, PASSWORD);
-        UserVO userVORet = new UserVO(null, NAME, VALID_EMAIL_1, null);
+        UserVO userVO = new UserVO(null, NAME_1, VALID_EMAIL_1, PASSWORD);
+        UserVO userVORet = new UserVO(null, NAME_1, VALID_EMAIL_1, null);
         Mockito.when(userService.register(any(UserVO.class))).thenReturn(ResponseVO.buildSuccess(userVORet));
         MockMvc mockMvc = standaloneSetup(userController).build();
         MvcResult mvcResult = mockMvc

@@ -41,34 +41,40 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerWithWrongEmailFormatTest() {
-        UserVO userVO = new UserVO(null, Constants.NAME, Constants.INVALID_EMAIL, Constants.PASSWORD);
+    public void registerWithDuplicatedEmailTest() {
+        UserVO userVO = new UserVO(null, Constants.NAME_1, Constants.VALID_EMAIL_1, Constants.PASSWORD);
+        List<UserDO> userList = new ArrayList<>();
+        UserDO userDO = new UserDO();
+        userDO.setName(Constants.NAME_2);
+        userDO.setPwd(Constants.PASSWORD);
+        userDO.setEmail(Constants.VALID_EMAIL_1);
+        userList.add(userDO);
+        Mockito.when(userMapper.selectByExample(any(UserDOExample.class))).thenReturn(userList);
+
         ResponseVO<UserVO> response = userService.register(userVO);
-        Assert.assertEquals(response.getSuccess(), false);
-        Assert.assertEquals(response.getMessage(), "Invalid email format");
-        Assert.assertNull(response.getContent());
+        ResponseVO<UserVO> expected = new ResponseVO<>(false, "Username or Email already exists", null);
+        Assert.assertEquals(response, expected);
     }
 
     @Test
     public void registerWithDuplicatedNameTest() {
-        UserVO userVO = new UserVO(null, Constants.NAME, Constants.VALID_EMAIL_1, Constants.PASSWORD);
+        UserVO userVO = new UserVO(null, Constants.NAME_1, Constants.VALID_EMAIL_1, Constants.PASSWORD);
         List<UserDO> userList = new ArrayList<>();
         UserDO userDO = new UserDO();
-        userDO.setName(Constants.NAME);
+        userDO.setName(Constants.NAME_1);
         userDO.setPwd(Constants.PASSWORD);
         userDO.setEmail(Constants.VALID_EMAIL_2);
         userList.add(userDO);
         Mockito.when(userMapper.selectByExample(any(UserDOExample.class))).thenReturn(userList);
 
         ResponseVO<UserVO> response = userService.register(userVO);
-        Assert.assertEquals(response.getSuccess(), false);
-        Assert.assertEquals(response.getMessage(), "Username or Email already exists");
-        Assert.assertNull(response.getContent());
+        ResponseVO<UserVO> expected = new ResponseVO<>(false, "Username or Email already exists", null);
+        Assert.assertEquals(response, expected);
     }
 
     @Test
     public void registerSuccessTest() {
-        UserVO userVO = new UserVO(null, Constants.NAME, Constants.VALID_EMAIL_1, Constants.PASSWORD);
+        UserVO userVO = new UserVO(null, Constants.NAME_1, Constants.VALID_EMAIL_1, Constants.PASSWORD);
         List<UserDO> userList = new ArrayList<>();
         Mockito.when(userMapper.selectByExample(any(UserDOExample.class))).thenReturn(userList);
         Mockito.when(userMapper.insert(any(UserDO.class))).thenReturn(1);
