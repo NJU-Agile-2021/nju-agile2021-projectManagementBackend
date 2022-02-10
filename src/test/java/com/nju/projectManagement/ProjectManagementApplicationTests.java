@@ -4,10 +4,10 @@ package com.nju.projectManagement;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
-class ProjectManagementApplicationTests {
+public class ProjectManagementApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }
