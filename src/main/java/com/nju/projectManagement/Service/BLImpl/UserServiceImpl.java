@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService, UserServiceForBl {
 
-    public static final String EMAIL_PATTERN = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
-
     @Autowired
     private UserMapper userMapper;
 
@@ -61,10 +59,6 @@ public class UserServiceImpl implements UserService, UserServiceForBl {
 
     @Override
     public ResponseVO<UserVO> register(UserVO userVO) {
-        // Check email format
-        if (!isValidEmail(userVO.getEmail())) {
-            return new ResponseVO<>(false, "Invalid email format", null);
-        }
         // Check user's name and email
         List<UserDO> userList = getExactMatchUsersByNameOrEmail(userVO.getName(), userVO.getEmail());
         if (userList != null && userList.size() > 0) {
@@ -108,15 +102,6 @@ public class UserServiceImpl implements UserService, UserServiceForBl {
             BeanUtils.copyProperties(x, userIdAndNameVO);
             return userIdAndNameVO;
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * 根据正则表达式检查邮箱格式
-     * @param email 邮箱
-     * @return 是否合法
-     */
-    private boolean isValidEmail(String email) {
-        return Pattern.matches(EMAIL_PATTERN, email);
     }
 
     /**

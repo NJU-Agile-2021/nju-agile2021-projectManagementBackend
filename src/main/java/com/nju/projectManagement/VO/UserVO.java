@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -14,11 +15,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserVO {
+
     private String id;
+
     @NotNull(message = "Empty username")
     private String name;
+
+    @Email(message = "Invalid email format")
     @NotNull(message = "Empty email")
     private String email;
+
     @NotNull(message = "Empty password")
     private String pwd;
 }
