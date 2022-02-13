@@ -1,5 +1,6 @@
 package com.nju.projectManagement.Config;
 
+import com.nju.projectManagement.Exception.StatisticException;
 import com.nju.projectManagement.Exception.UserException;
 import com.nju.projectManagement.VO.ResponseVO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -32,9 +33,13 @@ public class GlobalExceptionHandler {
         return new ResponseVO<>(false, message);
     }
 
-
     @ExceptionHandler(UserException.class)
     public ResponseVO<Object> handleUserException(UserException e) {
+        return new ResponseVO<>(false, e.getMessage());
+    }
+
+    @ExceptionHandler(StatisticException.class)
+    public ResponseVO<Object> handleStatisticException(StatisticException e) {
         return new ResponseVO<>(false, e.getMessage());
     }
 }
