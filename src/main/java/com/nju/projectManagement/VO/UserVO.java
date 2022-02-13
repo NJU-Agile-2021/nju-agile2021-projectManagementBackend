@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UserVO {
 
-    private String id;
+    private Integer id;
 
     @NotNull(message = "Empty username")
     private String name;

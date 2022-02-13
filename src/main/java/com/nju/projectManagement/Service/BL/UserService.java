@@ -33,4 +33,18 @@ public interface UserService {
      * @return 用户信息列表
      */
     ResponseVO<List<UserIdAndNameVO>> searchUsersByNameOrEmail(String userNameOrEmail);
+
+    /**
+     * 检查用户邮箱是否已经被使用
+     * @param email 邮箱
+     * @return 是否使用
+     */
+    ResponseVO<Boolean> checkUserEmail(String email);
+
+    /**
+     * 检查用户名是否已被使用
+     * @param name 用户名
+     * @return 是否使用
+     */
+    ResponseVO<Boolean> checkUserName(String name);
 }

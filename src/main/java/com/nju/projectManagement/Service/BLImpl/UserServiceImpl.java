@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService, UserServiceForBl {
     public ResponseVO<UserVO> register(UserVO userVO) {
         // Check user's name and email
         List<UserDO> userList = getExactMatchUsersByNameOrEmail(userVO.getName(), userVO.getEmail());
-        if (userList != null && userList.size() > 0) {
+        if (userList != null && !userList.isEmpty()) {
             return new ResponseVO<>(false, "Username or Email already exists", null);
         }
         // encrypt password and insert
@@ -88,9 +87,19 @@ public class UserServiceImpl implements UserService, UserServiceForBl {
     }
 
     @Override
+    public ResponseVO<Boolean> checkUserEmail(String email) {
+        return ResponseVO.buildSuccess(!getUsersByEmail(email).isEmpty());
+    }
+
+    @Override
+    public ResponseVO<Boolean> checkUserName(String name) {
+        return null;
+    }
+
+    @Override
     public List<UserIdAndNameVO> getBatchUserSimpleInfoById(List<Integer> idList) {
         // mybatis generator's query doesn't accept array size of 0
-        if (idList.size() == 0) {
+        if (idList.isEmpty()) {
             return new ArrayList<>();
         }
         // search by user id list
