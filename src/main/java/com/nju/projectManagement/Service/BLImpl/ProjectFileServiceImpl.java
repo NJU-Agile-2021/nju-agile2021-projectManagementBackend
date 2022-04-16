@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectFileServiceImpl implements ProjectFileService {
 
-//    private static final String PATH = "/root/agile/files/";
-    private static final String PATH = "D:/files/";
+    private static final String PATH = "/root/agile/files/";
+//    private static final String PATH = "D:/files/";
 
     @Autowired
     ProjectFileMapper projectFileMapper;
