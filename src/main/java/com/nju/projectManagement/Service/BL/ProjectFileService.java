@@ -19,7 +19,7 @@ public interface ProjectFileService {
     public ResponseVO<Boolean> deleteFile(DeleteFileForm deleteFileForm);
 
 
-    public void downloadFile(Integer fileId, HttpServletResponse res) throws IOException;
+    public void downloadFile(Integer fileId, HttpServletResponse res) throws Exception;
 
     public ResponseVO<List<ProjectFileInfoVO>> getFileList(ProjectIdAndUserIdForm projectIdAndUserIdForm);
 

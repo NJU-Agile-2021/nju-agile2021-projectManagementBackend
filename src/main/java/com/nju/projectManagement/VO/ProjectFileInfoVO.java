@@ -1,8 +1,10 @@
 package com.nju.projectManagement.VO;
 
+import com.nju.projectManagement.DO.ProjectFileDO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
@@ -26,4 +28,8 @@ public class ProjectFileInfoVO {
 
     private Date uploadTime;
 
+    public ProjectFileInfoVO(ProjectFileDO projectFileDO) {
+        BeanUtils.copyProperties(projectFileDO, this);
+        this.fileName = this.fileName.substring(0, this.fileName.lastIndexOf("-"));
+    }
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ModifyFilePermissionVO {
     private Integer userId;
+    private Integer projectId;
     private Integer fileId;
     private Integer permission;
 }

@@ -12,13 +12,13 @@ import java.util.Date;
  * @date 2022/4/16
  **/
 @Data
-@NoArgsConstructor
+
 @AllArgsConstructor
 public class UploadFileForm {
 
     private Integer projectId;
 
-    private Integer uploadUserId;
+    private Integer userId;
 
-    private MultipartFile multipartFile;
+    private MultipartFile file;
 }

@@ -17,6 +17,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Toby Fu
@@ -37,9 +38,9 @@ public class ProjectFileServiceImpl implements ProjectFileService {
     @Override
     public ResponseVO<Boolean> uploadFile(UploadFileForm uploadFileForm) throws IOException {
 
-        Integer userId = uploadFileForm.getUploadUserId();
+        Integer userId = uploadFileForm.getUserId();
         Integer projectId = uploadFileForm.getProjectId();
-        MultipartFile multipartFile = uploadFileForm.getMultipartFile();
+        MultipartFile multipartFile = uploadFileForm.getFile();
 
         ProjectFileDO projectFileDO = new ProjectFileDO();
         projectFileDO.setProjectId(projectId);
@@ -48,7 +49,7 @@ public class ProjectFileServiceImpl implements ProjectFileService {
         ProjectMemberDOExample projectMemberDOExample = new ProjectMemberDOExample();
         projectMemberDOExample.createCriteria().andUserIdEqualTo(userId).andProjectIdEqualTo(projectId);
         List<ProjectMemberDO> projectMemberDOS = projectMemberMapper.selectByExample(projectMemberDOExample);
-        if(projectMemberDOS.size() == 0) {
+        if(projectMemberDOS==null || projectMemberDOS.size() == 0) {
             return ResponseVO.buildFailure("此用户不属于此项目");
         }
 
@@ -83,7 +84,7 @@ public class ProjectFileServiceImpl implements ProjectFileService {
         projectMemberDOExample.createCriteria().andProjectIdEqualTo(projectId).andUserIdEqualTo(userId);
 
         List<ProjectMemberDO> projectMemberDOList = projectMemberMapper.selectByExample(projectMemberDOExample);
-        if(projectMemberDOList.size() == 0) {
+        if(projectMemberDOList==null || projectMemberDOList.size() == 0) {
             return ResponseVO.buildFailure("此用户不属于此项目");
         }
 
@@ -93,9 +94,9 @@ public class ProjectFileServiceImpl implements ProjectFileService {
         }
 
         ProjectFileDOExample projectFileDOExample = new ProjectFileDOExample();
-        projectFileDOExample.createCriteria().andIdEqualTo(fileId).andProjectIdEqualTo(projectId).andUploadUserIdEqualTo(userId);
+        projectFileDOExample.createCriteria().andIdEqualTo(fileId).andProjectIdEqualTo(projectId);
         List<ProjectFileDO> projectFileDOList = projectFileMapper.selectByExample(projectFileDOExample);
-        if(projectFileDOList.size() == 0) {
+        if(projectFileDOList==null || projectFileDOList.size() == 0) {
             return ResponseVO.buildFailure("文件不存在");
         }
         ProjectFileDO projectFileDO = projectFileDOList.get(0);
@@ -117,20 +118,78 @@ public class ProjectFileServiceImpl implements ProjectFileService {
     }
 
     @Override
-    public void downloadFile(Integer fileId, HttpServletResponse resp) throws IOException {
+    public void downloadFile(Integer fileId, HttpServletResponse resp) throws Exception {
         ProjectFileDO projectFileDO = projectFileMapper.selectByPrimaryKey(fileId);
+        if(projectFileDO == null){
+           throw new Exception("此文件不存在");
+        }
         String fileName = projectFileDO.getFileName();
         writeFileToResponse(fileName, resp);
     }
 
     @Override
     public ResponseVO<List<ProjectFileInfoVO>> getFileList(ProjectIdAndUserIdForm projectIdAndUserIdForm) {
-        return null;
+        int userId = projectIdAndUserIdForm.getUserId();
+        int projectId = projectIdAndUserIdForm.getProjectId();
+        ProjectMemberDOExample projectMemberDOExample = new ProjectMemberDOExample();
+        projectMemberDOExample.createCriteria().andUserIdEqualTo(userId).andProjectIdEqualTo(projectId);
+        List<ProjectMemberDO> projectMemberDOList = projectMemberMapper.selectByExample(projectMemberDOExample);
+
+        if(projectMemberDOList==null || projectMemberDOList.size() == 0) {
+            return ResponseVO.buildFailure("此成员不属于此项目");
+        }
+
+        ProjectMemberDO projectMemberDO = projectMemberDOList.get(0);
+        int role = projectMemberDO.getRole();
+
+
+        ProjectFileDOExample projectFileDOExample = new ProjectFileDOExample();
+
+        if(role == 0){
+            projectFileDOExample.createCriteria().andProjectIdEqualTo(projectId).andPermissionEqualTo(0);
+        }
+        else{
+            projectFileDOExample.createCriteria().andProjectIdEqualTo(projectId);
+        }
+        List<ProjectFileDO> projectFileDOList = projectFileMapper.selectByExample(projectFileDOExample);
+        List<ProjectFileInfoVO> res = projectFileDOList.stream().map(ProjectFileInfoVO::new).collect(Collectors.toList());
+
+
+        return ResponseVO.buildSuccess(res);
     }
 
     @Override
     public ResponseVO<Boolean> modifyFilePermission(ModifyFilePermissionVO modifyFilePermissionVO) {
-        return null;
+        int userId = modifyFilePermissionVO.getUserId();
+        int projectId = modifyFilePermissionVO.getProjectId();
+        int fileId = modifyFilePermissionVO.getFileId();
+
+
+        ProjectMemberDOExample projectMemberDOExample = new ProjectMemberDOExample();
+        projectMemberDOExample.createCriteria().andUserIdEqualTo(userId).andProjectIdEqualTo(projectId);
+        List<ProjectMemberDO> projectMemberDOList = projectMemberMapper.selectByExample(projectMemberDOExample);
+
+        if(projectMemberDOList==null || projectMemberDOList.size() == 0) {
+            return ResponseVO.buildFailure("此成员不属于此项目");
+        }
+
+        ProjectMemberDO projectMemberDO = projectMemberDOList.get(0);
+        int role = projectMemberDO.getRole();
+        if(role == 0){
+            return  ResponseVO.buildFailure("此成员没有修改文件权限的权限");
+        }
+
+        ProjectFileDOExample projectFileDOExample = new ProjectFileDOExample();
+        projectFileDOExample.createCriteria().andIdEqualTo(fileId).andProjectIdEqualTo(projectId);
+        List<ProjectFileDO> projectFileDOList = projectFileMapper.selectByExample(projectFileDOExample);
+        if(projectFileDOList==null || projectFileDOList.size() == 0) {
+            return ResponseVO.buildFailure("文件不存在");
+        }
+        ProjectFileDO projectFileDO = projectFileDOList.get(0);
+        projectFileDO.setPermission(modifyFilePermissionVO.getPermission());
+        projectFileMapper.updateByPrimaryKey(projectFileDO);
+
+        return ResponseVO.buildSuccess(true);
     }
 
     private void writeFileToResponse(String fileName, HttpServletResponse resp) throws IOException {
@@ -138,7 +197,7 @@ public class ProjectFileServiceImpl implements ProjectFileService {
         resp.setHeader("content-type", "application/octet-stream");
         resp.setContentType("application/octet-stream");
 
-        fileName = fileName.substring(0, fileName.indexOf("-"));
+        fileName = fileName.substring(0, fileName.lastIndexOf("-"));
 
         resp.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         byte[] buff = new byte[1024];
