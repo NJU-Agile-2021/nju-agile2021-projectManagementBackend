@@ -90,5 +90,16 @@
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="update_time" isGeneratedAlways="true"/>
         </table>
+
+        <table tableName="schedule" domainObjectName="ScheduleDO" mapperName="ScheduleMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="true" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+
+        <table tableName="project_file" domainObjectName="ProjectFileDO" mapperName="ProjectFileMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="true" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <columnOverride column="update_time" isGeneratedAlways="true"/>
+        </table>
     </context>
 </generatorConfiguration>

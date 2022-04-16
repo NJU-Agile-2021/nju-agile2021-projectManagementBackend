@@ -3,11 +3,8 @@ package com.nju.projectManagement.Mapper;
 import com.nju.projectManagement.DO.UserDO;
 import com.nju.projectManagement.DO.UserDOExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 

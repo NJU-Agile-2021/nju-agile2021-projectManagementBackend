@@ -3,11 +3,8 @@ package com.nju.projectManagement.Mapper;
 import com.nju.projectManagement.DO.AnnouncementDO;
 import com.nju.projectManagement.DO.AnnouncementDOExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface AnnouncementMapper {
     int deleteByPrimaryKey(Integer id);
 
