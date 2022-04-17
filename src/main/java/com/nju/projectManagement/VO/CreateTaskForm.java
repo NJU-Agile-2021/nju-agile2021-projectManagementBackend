@@ -15,4 +15,5 @@ public class CreateTaskForm {
     private int projectId;
     private int userId;
     private String title;
+    private int taskListId;
 }

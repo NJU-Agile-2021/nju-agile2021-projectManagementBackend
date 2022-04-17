@@ -119,6 +119,7 @@ public class TaskServiceImpl implements TaskService {
         taskDO.setTitle(createTaskForm.getTitle());
         taskDO.setProjectId(createTaskForm.getProjectId());
         taskDO.setCreateUserId(createTaskForm.getUserId());
+        taskDO.setTaskListId(createTaskForm.getTaskListId());
         taskMapper.insert(taskDO);
         return ResponseVO.buildSuccess(true);
     }
