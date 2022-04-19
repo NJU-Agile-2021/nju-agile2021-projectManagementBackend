@@ -9,6 +9,8 @@ public class TaskDO {
 
     private String title;
 
+    private String content;
+
     private Integer priority;
 
     private Integer state;
@@ -27,8 +29,6 @@ public class TaskDO {
 
     private Integer projectId;
 
-    private String content;
-
     public Integer getId() {
         return id;
     }
@@ -43,6 +43,14 @@ public class TaskDO {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 
     public Integer getPriority() {
@@ -117,17 +125,10 @@ public class TaskDO {
         this.projectId = projectId;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
     public enum Column {
         id("id", "id", "INTEGER", false),
         title("title", "title", "VARCHAR", false),
+        content("content", "content", "VARCHAR", false),
         priority("priority", "priority", "INTEGER", false),
         state("state", "state", "INTEGER", false),
         createUserId("create_user_id", "createUserId", "INTEGER", false),
@@ -136,8 +137,7 @@ public class TaskDO {
         estimateCompleteTime("estimate_complete_time", "estimateCompleteTime", "TIMESTAMP", false),
         completeTime("complete_time", "completeTime", "TIMESTAMP", false),
         taskListId("task_list_id", "taskListId", "INTEGER", false),
-        projectId("project_id", "projectId", "INTEGER", false),
-        content("content", "content", "LONGVARCHAR", false);
+        projectId("project_id", "projectId", "INTEGER", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

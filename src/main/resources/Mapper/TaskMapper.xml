@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.nju.projectManagement.DO.TaskDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="priority" jdbcType="INTEGER" property="priority" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
@@ -13,9 +14,6 @@
     <result column="complete_time" jdbcType="TIMESTAMP" property="completeTime" />
     <result column="task_list_id" jdbcType="INTEGER" property="taskListId" />
     <result column="project_id" jdbcType="INTEGER" property="projectId" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.nju.projectManagement.DO.TaskDO">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -47,29 +45,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, priority, state, create_user_id, create_time, update_time, estimate_complete_time, 
+    id, title, content, priority, state, create_user_id, create_time, update_time, estimate_complete_time, 
     complete_time, task_list_id, project_id
   </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.nju.projectManagement.DO.TaskDOExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from task
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="com.nju.projectManagement.DO.TaskDOExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -85,11 +63,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from task
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -107,13 +83,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into task (title, priority, state, 
-      create_user_id, estimate_complete_time, complete_time, 
-      task_list_id, project_id, content
+    insert into task (title, content, priority, 
+      state, create_user_id, estimate_complete_time, 
+      complete_time, task_list_id, project_id
       )
-    values (#{title,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
-      #{createUserId,jdbcType=INTEGER}, #{estimateCompleteTime,jdbcType=TIMESTAMP}, #{completeTime,jdbcType=TIMESTAMP}, 
-      #{taskListId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+    values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{estimateCompleteTime,jdbcType=TIMESTAMP}, 
+      #{completeTime,jdbcType=TIMESTAMP}, #{taskListId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.nju.projectManagement.DO.TaskDO">
@@ -124,6 +100,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="title != null">
         title,
+      </if>
+      <if test="content != null">
+        content,
       </if>
       <if test="priority != null">
         priority,
@@ -146,13 +125,13 @@
       <if test="projectId != null">
         project_id,
       </if>
-      <if test="content != null">
-        content,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="priority != null">
         #{priority,jdbcType=INTEGER},
@@ -175,9 +154,6 @@
       <if test="projectId != null">
         #{projectId,jdbcType=INTEGER},
       </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.nju.projectManagement.DO.TaskDO">
@@ -185,6 +161,9 @@
     <set>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="priority != null">
         priority = #{priority,jdbcType=INTEGER},
@@ -207,28 +186,13 @@
       <if test="projectId != null">
         project_id = #{projectId,jdbcType=INTEGER},
       </if>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.nju.projectManagement.DO.TaskDO">
-    update task
-    set title = #{title,jdbcType=VARCHAR},
-      priority = #{priority,jdbcType=INTEGER},
-      state = #{state,jdbcType=INTEGER},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      estimate_complete_time = #{estimateCompleteTime,jdbcType=TIMESTAMP},
-      complete_time = #{completeTime,jdbcType=TIMESTAMP},
-      task_list_id = #{taskListId,jdbcType=INTEGER},
-      project_id = #{projectId,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.nju.projectManagement.DO.TaskDO">
     update task
     set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
       priority = #{priority,jdbcType=INTEGER},
       state = #{state,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -240,14 +204,14 @@
   </update>
   <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     insert into task
-    (title, priority, state, create_user_id, estimate_complete_time, complete_time, task_list_id, 
-      project_id, content)
+    (title, content, priority, state, create_user_id, estimate_complete_time, complete_time, 
+      task_list_id, project_id)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.title,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, #{item.state,jdbcType=INTEGER}, 
-        #{item.createUserId,jdbcType=INTEGER}, #{item.estimateCompleteTime,jdbcType=TIMESTAMP}, 
-        #{item.completeTime,jdbcType=TIMESTAMP}, #{item.taskListId,jdbcType=INTEGER}, #{item.projectId,jdbcType=INTEGER}, 
-        #{item.content,jdbcType=LONGVARCHAR})
+      (#{item.title,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, 
+        #{item.state,jdbcType=INTEGER}, #{item.createUserId,jdbcType=INTEGER}, #{item.estimateCompleteTime,jdbcType=TIMESTAMP}, 
+        #{item.completeTime,jdbcType=TIMESTAMP}, #{item.taskListId,jdbcType=INTEGER}, #{item.projectId,jdbcType=INTEGER}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" keyColumn="id" keyProperty="list.id" parameterType="map" useGeneratedKeys="true">
@@ -264,6 +228,9 @@
           <foreach collection="selective" item="column" separator=",">
             <if test="'title'.toString() == column.value">
               #{item.title,jdbcType=VARCHAR}
+            </if>
+            <if test="'content'.toString() == column.value">
+              #{item.content,jdbcType=VARCHAR}
             </if>
             <if test="'priority'.toString() == column.value">
               #{item.priority,jdbcType=INTEGER}
@@ -286,9 +253,6 @@
             <if test="'project_id'.toString() == column.value">
               #{item.projectId,jdbcType=INTEGER}
             </if>
-            <if test="'content'.toString() == column.value">
-              #{item.content,jdbcType=LONGVARCHAR}
-            </if>
           </foreach>
           )
         </foreach>
@@ -300,6 +264,9 @@
             <trim prefix="(" suffix=")" suffixOverrides=",">
               <if test="item.title != null">
                 title,
+              </if>
+              <if test="item.content != null">
+                content,
               </if>
               <if test="item.priority != null">
                 priority,
@@ -322,9 +289,6 @@
               <if test="item.projectId != null">
                 project_id,
               </if>
-              <if test="item.content != null">
-                content,
-              </if>
             </trim>
           </trim>
           values
@@ -332,6 +296,9 @@
             <trim prefix="(" suffix=")" suffixOverrides=",">
               <if test="item.title != null">
                 #{item.title,jdbcType=VARCHAR},
+              </if>
+              <if test="item.content != null">
+                #{item.content,jdbcType=VARCHAR},
               </if>
               <if test="item.priority != null">
                 #{item.priority,jdbcType=INTEGER},
@@ -353,9 +320,6 @@
               </if>
               <if test="item.projectId != null">
                 #{item.projectId,jdbcType=INTEGER},
-              </if>
-              <if test="item.content != null">
-                #{item.content,jdbcType=LONGVARCHAR},
               </if>
             </trim>
           </trim>

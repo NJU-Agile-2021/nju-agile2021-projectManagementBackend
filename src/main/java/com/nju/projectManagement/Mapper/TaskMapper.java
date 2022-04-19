@@ -14,15 +14,11 @@ public interface TaskMapper {
 
     int insertSelective(TaskDO record);
 
-    List<TaskDO> selectByExampleWithBLOBs(TaskDOExample example);
-
     List<TaskDO> selectByExample(TaskDOExample example);
 
     TaskDO selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(TaskDO record);
-
-    int updateByPrimaryKeyWithBLOBs(TaskDO record);
 
     int updateByPrimaryKey(TaskDO record);
 
