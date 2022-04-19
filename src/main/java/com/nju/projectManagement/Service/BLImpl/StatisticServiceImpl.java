@@ -148,6 +148,39 @@ public class StatisticServiceImpl implements StatisticService {
         return ResponseVO.buildSuccess(finishTasksForms);
     }
 
+    @Override
+    public ResponseVO<List<UserWorkProgessVo>> getUserWorkProgressByProjectId(Integer projectId) {
+        verifyProject(projectId);
+        List<TaskDO> taskDOS=getAllTaskByProjectId(projectId);
+        List<TaskBelongDO> taskBelongDOS=getAllTaskBelongByTaskId(taskDOS.stream().map(TaskDO::getId).collect(Collectors.toList()));
+        Map<Integer,TaskVO> taskVOMap=new HashMap<>();
+        for(TaskDO i:taskDOS){
+            taskVOMap.put(i.getId(),new TaskVO(i));
+        }
+        List<UserIdAndNameVO> users=userService.getBatchUserSimpleInfoById(taskBelongDOS.stream().map(TaskBelongDO::getBelongUserId).collect(Collectors.toList()));
+        List<UserWorkProgessVo> ans=new ArrayList<>();
+        for(UserIdAndNameVO user:users){
+            UserWorkProgessVo now=new UserWorkProgessVo();
+            now.setUser(user);
+            for(TaskBelongDO belong:taskBelongDOS){
+                if(belong.getBelongUserId().equals(user.getId())){
+                    TaskVO thisTask=taskVOMap.get(belong.getTaskId());
+                    if(thisTask.getState()==1&&thisTask.getEstimateCompleteTime().before(new Date(System.currentTimeMillis()))){
+                        now.getPostponed().add(taskVOMap.get(belong.getTaskId()));
+                    }
+                    else if(thisTask.getState()==3){
+                        now.getCompleted().add(taskVOMap.get(belong.getTaskId()));
+                    }
+                    else{
+                        now.getInProgress().add(taskVOMap.get(belong.getTaskId()));
+                    }
+                }
+            }
+            ans.add(now);
+        }
+        return ResponseVO.buildSuccess(ans);
+    }
+
     private void verifyProject(Integer projectId) {
         ProjectDO projectDO = projectMapper.selectByPrimaryKey(projectId);
         if (projectDO == null) {

@@ -169,6 +169,9 @@ public class TaskServiceImpl implements TaskService {
                     return taskBelongDO;
                 }
         ).collect(Collectors.toList());
+        TaskDO taskDO = taskMapper.selectByPrimaryKey(assignTaskForm.getTaskId());
+        taskDO.setState(1);
+        taskMapper.updateByPrimaryKey(taskDO);
         taskBelongMapper.batchInsert(taskBelongDOList);
         return ResponseVO.buildSuccess(true);
     }
@@ -278,5 +281,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public ResponseVO<List<UserTaskVO>> getUncheckedTasks(int projectId) {
         return null;
+    }
+
+    @Override
+    public ResponseVO<Boolean> claimTask(int userId, int taskId) {
+        if(taskMapper.selectByPrimaryKey(taskId)==null){
+            return ResponseVO.buildFailure("no such task");
+        }
+        TaskBelongDO taskBelongDO=new TaskBelongDO();
+        taskBelongDO.setBelongUserId(userId);
+        taskBelongDO.setTaskId(taskId);
+        taskBelongMapper.insert(taskBelongDO);
+        return ResponseVO.buildSuccess(true);
     }
 }

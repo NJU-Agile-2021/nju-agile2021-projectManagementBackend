@@ -44,4 +44,5 @@ public interface TaskService {
 
     ResponseVO<List<UserTaskVO>> getUncheckedTasks(int projectId);
 
+    ResponseVO<Boolean> claimTask(int userId,int taskId);
 }
