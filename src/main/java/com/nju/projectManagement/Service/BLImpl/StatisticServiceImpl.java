@@ -50,15 +50,31 @@ public class StatisticServiceImpl implements StatisticService {
         for (TaskStateKind taskStateKind : TaskStateKind.values()) {
             resultMap.put(taskStateKind.toString(), 0);
         }
-        Map<Integer, Long> taskMap = taskList.stream()
-                .filter(x -> resultMap
-                        .containsKey(TaskStateKind.fromValue(x.getState())
-                                .orElseThrow(() -> new StatisticException("Task state error")).toString()))
-                .collect(Collectors.groupingBy(TaskDO::getState, Collectors.counting()));
-        taskMap.forEach((key, value) -> {
-            resultMap.put(TaskStateKind.fromValue(key)
-                    .orElseThrow(() -> new StatisticException("Task state error")).toString(), value.intValue());
-        });
+        for (TaskDO task: taskList) {
+            int state = task.getState();
+            if (state == 0) {
+                resultMap.put(TaskStateKind.UNASSIGNED.toString(), resultMap.get(TaskStateKind.UNASSIGNED.toString()) + 1);
+            }
+            else if (state == 1) {
+                if (task.getEstimateCompleteTime().after(task.getCompleteTime())) {
+                    resultMap.put(TaskStateKind.IN_PROGRESS.toString(), resultMap.get(TaskStateKind.IN_PROGRESS.toString()) + 1);
+                }
+                else {
+                    resultMap.put(TaskStateKind.IN_PROGRESS_DELAYED.toString(), resultMap.get(TaskStateKind.IN_PROGRESS_DELAYED.toString()) + 1);
+                }
+            }
+            else if (state == 2) {
+                resultMap.put(TaskStateKind.TO_BE_CHECKED.toString(), resultMap.get(TaskStateKind.TO_BE_CHECKED.toString()) + 1);
+            }
+            else if (state == 3) {
+                if (task.getEstimateCompleteTime().after(task.getCompleteTime())) {
+                    resultMap.put(TaskStateKind.FINISHED.toString(), resultMap.get(TaskStateKind.FINISHED.toString()) + 1);
+                }
+                else {
+                    resultMap.put(TaskStateKind.FINISHED_DELAYED.toString(), resultMap.get(TaskStateKind.FINISHED_DELAYED.toString()) + 1);
+                }
+            }
+        }
         return ResponseVO.buildSuccess(resultMap);
     }
 
