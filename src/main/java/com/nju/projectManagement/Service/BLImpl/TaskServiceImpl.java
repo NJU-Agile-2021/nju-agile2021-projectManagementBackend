@@ -169,6 +169,9 @@ public class TaskServiceImpl implements TaskService {
                     return taskBelongDO;
                 }
         ).collect(Collectors.toList());
+        TaskDO taskDO = taskMapper.selectByPrimaryKey(assignTaskForm.getTaskId());
+        taskDO.setState(1);
+        taskMapper.updateByPrimaryKey(taskDO);
         taskBelongMapper.batchInsert(taskBelongDOList);
         return ResponseVO.buildSuccess(true);
     }
