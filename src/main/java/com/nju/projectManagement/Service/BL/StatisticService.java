@@ -42,4 +42,11 @@ public interface StatisticService {
      * @return 统计结果
      */
     ResponseVO<List<MemberAndNumberOfFinishTasksForm>> getTaskFinishedNumberByMemberChart(Integer projectId);
+
+    /**
+     * 获取该项目的各个人员的任务进度
+     * @param projectId
+     * @return 进度结果
+     */
+    ResponseVO<List<UserWorkProgessVo>> getUserWorkProgressByProjectId(Integer projectId);
 }

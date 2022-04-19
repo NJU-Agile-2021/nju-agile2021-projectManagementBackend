@@ -102,6 +102,12 @@ public class TaskController {
         return taskService.addTaskLabel(taskId, label);
     }
 
+    @Operation(summary = "用户主动认领任务")
+    @PostMapping(value = "/claimTask")
+    ResponseVO<Boolean> claimTask(@RequestParam int userId,@RequestParam int taskId){
+        return taskService.claimTask(userId,taskId);
+    }
+
 //    @Operation(summary = "getUncheckedTasks获取未验收的任务列表")
 //    @GetMapping(value = "/getUncheckedTasks")
 //    ResponseVO<List<UserTaskVO>> getUncheckTasks(@RequestParam int projectId){

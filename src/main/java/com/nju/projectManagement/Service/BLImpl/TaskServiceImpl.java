@@ -282,4 +282,16 @@ public class TaskServiceImpl implements TaskService {
     public ResponseVO<List<UserTaskVO>> getUncheckedTasks(int projectId) {
         return null;
     }
+
+    @Override
+    public ResponseVO<Boolean> claimTask(int userId, int taskId) {
+        if(taskMapper.selectByPrimaryKey(taskId)==null){
+            return ResponseVO.buildFailure("no such task");
+        }
+        TaskBelongDO taskBelongDO=new TaskBelongDO();
+        taskBelongDO.setBelongUserId(userId);
+        taskBelongDO.setTaskId(taskId);
+        taskBelongMapper.insert(taskBelongDO);
+        return ResponseVO.buildSuccess(true);
+    }
 }

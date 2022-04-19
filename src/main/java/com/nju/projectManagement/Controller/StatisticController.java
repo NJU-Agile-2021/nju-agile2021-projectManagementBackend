@@ -54,4 +54,10 @@ public class StatisticController {
         return statisticService.getTaskFinishedNumberByMemberChart(projectId);
     }
 
+    @Operation(summary = "获得该项目的各个人员的工作进度：已完成项目数、进行中项目数、已延期项目数")
+    @GetMapping(value = "/getUserWorkProgress")
+    public ResponseVO<List<UserWorkProgessVo>> getUserWorkProgressByProjectId(@RequestParam @NotNull(message = "Empty project id") Integer projectId){
+        return statisticService.getUserWorkProgressByProjectId(projectId);
+    }
+
 }
