@@ -1,5 +1,6 @@
 package com.nju.projectManagement.Config;
 
+import com.nju.projectManagement.Exception.ScheduleException;
 import com.nju.projectManagement.Exception.StatisticException;
 import com.nju.projectManagement.Exception.UserException;
 import com.nju.projectManagement.VO.ResponseVO;
@@ -40,6 +41,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StatisticException.class)
     public ResponseVO<Object> handleStatisticException(StatisticException e) {
+        return new ResponseVO<>(false, e.getMessage());
+    }
+
+    public ResponseVO<Object> handleScheduleException(ScheduleException e) {
         return new ResponseVO<>(false, e.getMessage());
     }
 }
