@@ -202,7 +202,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     private List<TaskDO> getFinishedTaskByProjectId(Integer projectId) {
         TaskDOExample taskExample = new TaskDOExample();
-        taskExample.createCriteria().andProjectIdEqualTo(projectId).andCompleteTimeIsNotNull();
+        taskExample.createCriteria().andProjectIdEqualTo(projectId).andStateGreaterThanOrEqualTo(2);
         return taskMapper.selectByExample(taskExample);
     }
 
