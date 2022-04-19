@@ -56,7 +56,7 @@ public class StatisticServiceImpl implements StatisticService {
                 resultMap.put(TaskStateKind.UNASSIGNED.toString(), resultMap.get(TaskStateKind.UNASSIGNED.toString()) + 1);
             }
             else if (state == 1) {
-                if (task.getEstimateCompleteTime().after(task.getCompleteTime())) {
+                if (task.getEstimateCompleteTime().after(new Date())) {
                     resultMap.put(TaskStateKind.IN_PROGRESS.toString(), resultMap.get(TaskStateKind.IN_PROGRESS.toString()) + 1);
                 }
                 else {
@@ -67,7 +67,7 @@ public class StatisticServiceImpl implements StatisticService {
                 resultMap.put(TaskStateKind.TO_BE_CHECKED.toString(), resultMap.get(TaskStateKind.TO_BE_CHECKED.toString()) + 1);
             }
             else if (state == 3) {
-                if (task.getEstimateCompleteTime().after(task.getCompleteTime())) {
+                if (task.getEstimateCompleteTime().after(new Date())) {
                     resultMap.put(TaskStateKind.FINISHED.toString(), resultMap.get(TaskStateKind.FINISHED.toString()) + 1);
                 }
                 else {
