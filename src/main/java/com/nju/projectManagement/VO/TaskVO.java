@@ -1,5 +1,6 @@
 package com.nju.projectManagement.VO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nju.projectManagement.DO.TaskDO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,12 +27,16 @@ public class TaskVO {
 
     private Integer createUserId;
 
+    @JsonFormat(locale = "zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(locale = "zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    @JsonFormat(locale = "zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date estimateCompleteTime;
 
+    @JsonFormat(locale = "zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date completeTime;
 
     private Integer taskListId;
